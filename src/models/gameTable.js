@@ -1,9 +1,21 @@
 const { DataTypes } = require("sequelize");
 const { sequelizeConfig } = require("../../config/dbConfig");
 
-const GameSchema = sequelizeConfig.define('Games', {
-    gameId: {
+const GameValidationSchema = sequelizeConfig.define('GameValidation', {
+    skuCode: {
         type: DataTypes.STRING,
+        allowNull: false
+    },
+    clusterName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    pin: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    gameId: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     gameStartDate: {
@@ -16,4 +28,4 @@ const GameSchema = sequelizeConfig.define('Games', {
     }
 });
 
-module.exports = GameSchema;
+module.exports = GameValidationSchema;

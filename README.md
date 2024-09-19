@@ -11,6 +11,7 @@ The app works for the moduel called game-allocation with th help of transactions
 
 * Node >= 18.20.2
 * Git
+* MySQL
 
 ## Common setup
 
@@ -29,6 +30,7 @@ npm install or npm install --save
 
 - Create one env file and assign the environment variables
 Open `variables.env` and inject the access token, port number etc
+- Start your local MYSql server ```mysql -u username -p```
 
 ```
 NODE_ENV=development

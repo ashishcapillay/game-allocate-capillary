@@ -5,7 +5,6 @@ const { mySqlConnection } = require("./config/dbConfig");
 require("dotenv").config({path: "variables.env"})
 mySqlConnection();
 
-gameAllocateApp.use(SERVER.BASE_EP, require("./src/routes/getTrx"));
 gameAllocateApp.use(SERVER.BASE_EP, require("./src/routes/gameAllocate"));
 
 gameAllocateApp.listen(SERVER.PORT, (error) => {
