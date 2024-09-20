@@ -1,10 +1,10 @@
 ## The node.js for Game Allocate module : Capillary
 ## Created By : Ashish Singh
 
-The app works for the moduel called game-allocation with th help of transactions:
+The app works for the module called game-allocation with the help of transactions:
 
 - Get the details of transacstion
-- Vaidate the transaction against the SKUs
+- Vaidate the transaction against the SKUs and GameId
 - Allocate the game and store/update values
 
 ## Requirements

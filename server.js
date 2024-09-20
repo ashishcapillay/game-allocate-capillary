@@ -2,7 +2,7 @@ const express = require("express");
 const { SERVER } = require("./utils/constant");
 const gameAllocateApp = express();
 const { mySqlConnection } = require("./config/dbConfig");
-require("dotenv").config({path: "variables.env"})
+require("dotenv").config({path: "variable.env"})
 mySqlConnection();
 
 gameAllocateApp.use(SERVER.BASE_EP, require("./src/routes/gameAllocate"));
