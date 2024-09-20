@@ -1,7 +1,9 @@
-const { Op, cast } = require('sequelize');
+const { Op } = require('sequelize');
 const { sequelizeConfig } = require("../config/dbConfig");
 const GameValidationSchema = require("../src/models/gameTable");
 const GameAllocationHistorySchema = require("../src/models/gameAllocateHistory");
+const FailedGameAllocateSchema = require("../src/models/failedGameAllocation");
+const loggerPino = require("../logger");
 
 class DBQuery {
     constructor(){}
@@ -14,7 +16,7 @@ class DBQuery {
             const storeGV = await GameValidationSchema.bulkCreate(params);
             return storeGV?.length ? storeGV : {};
         } catch (error) {
-            console.log("DBQuery-storeGameValidateInTable-Error", error);
+            loggerPino.error(`DBQuery-storeGameValidateInTable-Error : ${error}`);
             throw new Error(error);
         }
     }
@@ -51,7 +53,7 @@ class DBQuery {
             const fetchGV = await GameValidationSchema.findOne(findQry, {subQuery: false});
             return fetchGV ? JSON.stringify(fetchGV, null, 2) : {}; 
         } catch (error) {
-            console.log("DBQuery-fetchGameValidateQuery-Error", error);
+            loggerPino.error(`DBQuery-fetchGameValidateQuery-Error : ${error}`);
             throw new Error(error);
         }
     }
@@ -59,19 +61,34 @@ class DBQuery {
     updateGameTotalAllocation = async (gameid, mobile, playlimit) => {
         try {
             await sequelizeConfig.sync({ force: false, alter: true });
+            // change it to find or create and update
+            const whereQry = {
+                gameId: gameid,
+                mobile: mobile
+            }
+            const valuesToAddUpd = {
+                gameId: gameid, 
+                mobile: mobile, 
+                totalAllocation: playlimit
+            }
             await GameAllocationHistorySchema.findOrCreate({
-                where: {
-                    gameId: gameid,
-                    mobile: mobile
-                },
-                defaults: {
-                    gameId: gameid, 
-                    mobile: mobile, 
-                    totalAllocation: playlimit
-                }
+                where: whereQry,
+                defaults: valuesToAddUpd
             });
+            await GameAllocationHistorySchema.update(valuesToAddUpd, {where: whereQry})
         } catch (error) {
-            console.log("DBQuery-updateGameTotalAllocation-Error", error);
+            loggerPino.error(`DBQuery-updateGameTotalAllocation-Error : ${error}`);
+            throw new Error(error);
+        }
+    }
+
+    storeFailedGameAllocationFromAPI = async (params) => {
+        try {
+            await sequelizeConfig.sync({ force: false });
+            const storeFGA = await FailedGameAllocateSchema.create(params);
+            return storeFGA?.length ? storeFGA : {};
+        } catch (error) {
+            loggerPino.error(`DBQuery-storeFailedGameAllocationFromAPI-Error : ${error}`);
             throw new Error(error);
         }
     }

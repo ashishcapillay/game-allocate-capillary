@@ -1,9 +1,10 @@
 const express = require("express");
 const GameAllocationRouter = express.Router();
 const GameAllocationController = require("../controllers/game");
+const { handleProcessGAReq } = require("../../utils/middleware");
 
 // @@ Main Endpoint : Process game allocation, validation and updation:
-GameAllocationRouter.post("/process_game_allocation", async (req, res) => {
+GameAllocationRouter.post("/process_game_allocation", handleProcessGAReq, async (req, res) => {
     return res.send(await new GameAllocationController().procesGameValidations(req));
 });
 

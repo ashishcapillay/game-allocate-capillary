@@ -8,7 +8,7 @@ module.exports = {
         BASIC_AUTH: process.env.BASIC_AUTH ?? ""
     },
     SERVER: {
-        PORT: process.env.PORT ?? 4100,
+        PORT: process.env.PORT ?? 4103,
         BASE_EP: "/game-allocate"
     },
     DB: {
@@ -69,6 +69,13 @@ module.exports = {
             }
         ],
         TRX_SKUS: ["XYZ", "WER", "PQR", "LKE"],
-        MOBILE: 919991000015
+        MOBILE: 919991000017
+    },
+    RETURN_MESSAGE: {
+        TRX_NOT_AVAILABLE: "Tranasaction details is not valid!",
+        NO_SKU_PIN_MATCHED: "No SKU, Cluster and Pin are matched!",
+        NO_TRX_DETAILS: "No Transaction details found, for process allocation!",
+        GAME_ALLOCATED_UPDATE_ERROR: "Error while allocating game, customer not found!",
+        GAME_ALLOCATED: "Game allocation done and updated!"
     }
 }

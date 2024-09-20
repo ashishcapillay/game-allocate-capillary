@@ -1,8 +1,10 @@
 const axios = require("axios");
 const { HTTP, TOKENS } = require("./constant");
+const loggerPino = require("../logger");
+const DBQuery = require("../utils/dbQueries");
 
 module.exports = {
-    getTrxDetails: async () => {
+    getTrxDetails: async (trxId) => {
         try {
             const callTrxDetApi = await axios.get(HTTP.GET_TRANSACTION_EP, {
                 params: {
@@ -17,16 +19,16 @@ module.exports = {
             });
             return callTrxDetApi ? callTrxDetApi.data : {};
         } catch (error) {
-            console.log("API-getTrxDetails-Error", error);
+            loggerPino.error(`API-getTrxDetails-Error : ${error}`);
             throw error;
         }
     },
 
-    doGameAllocation: async (gameId, mobile) => {
+    doGameAllocation: async (gameid, mobile, trxid) => {
         try {
             const allocGameApi = await axios.post(HTTP.GAME_ALLOCATE_EP, {
                 "brandId": 150,
-                "gameId": gameId ?? 68186,
+                "gameId": gameid ?? 68186,
                 "mobile": mobile ?? 919991000015
             }, {
                 headers: {
@@ -35,9 +37,14 @@ module.exports = {
                     "Content-Type": "application/json"
                 }
             });
-            return allocGameApi ? allocGameApi.data : {};
+            if(allocGameApi && allocGameApi.data) return allocGameApi.data;
+            await new DBQuery().storeFailedGameAllocationFromAPI({
+                trxId: trxid,
+                gameId: gameid,
+                mobile: mobile
+            });
         } catch (error) {
-            console.log("doGameAllocation-Error", error);
+            loggerPino.error(`API-doGameAllocation-Error : ${error}`);
             throw error;
         }
     },
@@ -54,7 +61,7 @@ module.exports = {
             });
             return callGamificationApi?.data ?? {}
         } catch (error) {
-            console.log("getGamificationDetails-Error", error);
+            loggerPino.error(`API-getGamificationDetails-Error : ${error}`);
             throw error;
         }
     }
