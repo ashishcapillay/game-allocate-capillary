@@ -43,6 +43,7 @@ module.exports = {
                 gameId: gameid,
                 mobile: mobile
             });
+            return {};
         } catch (error) {
             loggerPino.error(`API-doGameAllocation-Error : ${error}`);
             throw error;
